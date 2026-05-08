@@ -4,6 +4,7 @@ import com.example.demo.appuser.AppUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -34,16 +35,20 @@ public class WebSecurityConfig {
         return http.build();
     }
 
-//    @Bean
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.authenticationProvider(daoAuthenticationProvider());
-//    }
-
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider =
                 new DaoAuthenticationProvider(appUserService);
         provider.setPasswordEncoder(bCryptPasswordEncoder);
         return provider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http)
+            throws Exception {
+        AuthenticationManagerBuilder auth =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
+        auth.authenticationProvider(daoAuthenticationProvider());
+        return auth.build();
     }
 }
