@@ -15,4 +15,14 @@ public class LoginController {
     public String home() {
         return "home";
     }
+
+    @GetMapping("/register")
+    public String register() {
+        return "register";
+    }
+
+    @GetMapping("/welcome")
+    public String welcome() {
+        return "welcome";
+    }
 }

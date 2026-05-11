@@ -10,7 +10,9 @@ This application is a secure user authentication system built with Spring Boot t
 - Secure password storage
 - Role-based access control (USER/ADMIN)
 - RESTful API endpoints
+- Web-based user interface
 - PostgreSQL database integration
+- Modern responsive design
 
 ## Tech Stack
 
@@ -87,6 +89,30 @@ mvn spring-boot:run
 
 The application will start on `http://localhost:8080`
 
+## Web Interface
+
+The application provides a complete web-based user interface with the following pages:
+
+### Registration Page
+- **URL**: `http://localhost:8080/register`
+- **Features**: User registration form with validation, password confirmation, and success/error messages
+- **Access**: Public (no authentication required)
+
+### Login Page
+- **URL**: `http://localhost:8080/login-page`
+- **Features**: Secure login form, remember me option, error handling
+- **Access**: Public (no authentication required)
+
+### Welcome Page
+- **URL**: `http://localhost:8080/welcome`
+- **Features**: Post-login success page with user information display
+- **Access**: Requires authentication (redirected after successful login)
+
+### Home Page
+- **URL**: `http://localhost:8080/home`
+- **Features**: Basic home page template
+- **Access**: Requires authentication
+
 ## API Endpoints
 
 ### Registration
@@ -124,8 +150,10 @@ Confirm user registration using the token sent to the user's email.
 
 ### Web Pages
 
-**GET** `/login-page` - Login page (returns Thymeleaf template)
-**GET** `/home` - Home page (returns Thymeleaf template)
+**GET** `/register` - Registration page with form validation
+**GET** `/login-page` - Login page with authentication
+**GET** `/welcome` - Welcome page displayed after successful login
+**GET** `/home` - Home page (requires authentication)
 
 ## User Roles
 
@@ -188,6 +216,29 @@ The application uses `ddl-auto: create-drop` which means:
 
 For production, change this to `update` or `validate`.
 
+## User Flow
+
+### Registration Flow
+1. Navigate to `http://localhost:8080/register`
+2. Fill in registration form (first name, last name, email, password)
+3. Submit form - creates user account (disabled by default)
+4. Receive confirmation email with verification token
+5. Click confirmation link or visit `/api/v1/registration/confirm?token={token}`
+6. Account becomes enabled and ready for login
+
+### Login Flow
+1. Navigate to `http://localhost:8080/login-page`
+2. Enter email and password
+3. Successful login redirects to welcome page
+4. Welcome page displays user information and provides logout option
+
+### Features
+- **Form Validation**: Client-side and server-side validation
+- **Error Handling**: User-friendly error messages for invalid credentials
+- **Success Messages**: Confirmation for registration, logout, and email verification
+- **Responsive Design**: Mobile-friendly interface using Bootstrap
+- **Security**: CSRF protection, password encryption, session management
+
 ## Testing
 
 Run the test suite:
@@ -215,6 +266,40 @@ Run the JAR file:
 ```bash
 java -jar target/demo-0.0.1-SNAPSHOT.jar
 ```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Registration Page Not Accessible**
+   - Ensure Spring Security configuration permits `/register` endpoint
+   - Check that application is running on correct port
+
+2. **Login Redirect Issues**
+   - Verify login.html template exists in `/templates`
+   - Check Spring Security form login configuration
+
+3. **Database Connection Error**
+   - Ensure PostgreSQL is running
+   - Check database credentials in `application.yaml`
+   - Verify database exists
+
+4. **Email Not Sending**
+   - Check mail server configuration
+   - Ensure mail server is running on specified port
+   - Verify email credentials
+
+5. **Port Already in Use**
+   - Change server port in `application.yaml`:
+   ```yaml
+   server:
+     port: 8081
+   ```
+
+6. **Registration Form Not Working**
+   - Check browser console for JavaScript errors
+   - Verify API endpoint `/api/v1/registration` is accessible
+   - Ensure CORS is properly configured
 
 ## License
 

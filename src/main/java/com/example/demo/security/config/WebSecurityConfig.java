@@ -28,9 +28,21 @@ public class WebSecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v*/registration/**").permitAll()
+                        .requestMatchers("/register").permitAll()
+                        .requestMatchers("/login-page").permitAll()
+                        .requestMatchers("/welcome").authenticated()
+                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .formLogin(Customizer.withDefaults());
+                .formLogin(form -> form
+                        .loginPage("/login-page")
+                        .defaultSuccessUrl("/welcome", true)
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/login-page?logout")
+                        .permitAll()
+                );
 
         return http.build();
     }
